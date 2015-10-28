@@ -10,7 +10,7 @@ I am just exposing data already on site. No adjustments.
 - Node
 - npm
 
-## Installation
+## Installation & running
 
 - ``` npm install ```
 - ``` node index.js ```
