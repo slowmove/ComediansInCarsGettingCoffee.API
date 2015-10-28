@@ -9,42 +9,21 @@ var express = require('express'),
 	schedule = require('node-schedule'),
 	cheerio = require('cheerio');
 
+var scraperService = require('services/scraperService');
+
 var app = express()
 var db = low('db.json');
 
 var site = "http://comediansincarsgettingcoffee.com/";
+
+scraperService.parseSite(site);
 
 var rule = new schedule.RecurrenceRule();
 rule.hour = 0;
 rule.minute = 10;
 
 var j = schedule.scheduleJob(rule, function() {
-	request(site, function (error, response, body) {			
-		if (!error && response.statusCode == 200) {
-			var $ = cheerio.load(body);
-			var videoData = $('#videoData').html();
-			var videos = JSON.parse(videoData).videos;
-			
-			_.forEach(videos, function(n, key) {
-				var itemExist = db('videos').find({ slug: n.slug });
-
-				if(!itemExist) {
-					request(n.mediaUrl, function (error, response, body) {
-						if (!error && response.statusCode == 200) {
-
-							var videoDataArray = body.split('\n');
-							_.forEach(videoDataArray, function(line, lineNumber) {
-								if(line.indexOf('RESOLUTION=1280x720') > -1) {
-									n.videoUrl = videoDataArray[1*lineNumber+1];
-									db('videos').push(n);
-								}
-							});						
-						}
-					});
-				}
-			});
-		}
-	});
+	scraperService.parseSite(site);
 });
 
 app.get('/', function(req, res) {
