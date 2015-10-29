@@ -27,10 +27,12 @@ var j = schedule.scheduleJob(rule, function() {
 });
 
 app.get('/', function(req, res) {
+	
 	var result = db('videos')
 				.chain()
 				.sortByOrder(['season', 'episode'], ['asc', 'asc'])
 				.value();
+
 	res.send(result);
 });
 
