@@ -27,7 +27,6 @@ module.exports = (function(){
 								_.forEach(videoDataArray, function(line, lineNumber) {
 									if(line.indexOf('RESOLUTION=1280x720') > -1) {										
 										n.videoUrl = videoDataArray[1*lineNumber+1];
-										console.log(n.videoUrl);
 										db('videos').push(n);
 										db.save();
 									}
