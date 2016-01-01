@@ -12,7 +12,6 @@ var express = require('express'),
 var scraperService = require('services/scraperService');
 
 var app = express()
-var db = low('db.json');
 
 var site = "http://comediansincarsgettingcoffee.com/";
 
@@ -27,10 +26,14 @@ var j = schedule.scheduleJob(rule, function() {
 });
 
 app.get('/', function(req, res) {
+	var db = low('db.json', {
+	  	autosave: false	  	
+	});
 	var result = db('videos')
 				.chain()
 				.sortByOrder(['season', 'episode'], ['asc', 'asc'])
 				.value();
+
 	res.send(result);
 });
 
@@ -38,7 +41,9 @@ app.get('/season/:season', function(req, res) {
 	var season = req.params.season;
 
 	console.log("Looking for season " + season);
-
+	var db = low('db.json', {
+	  	autosave: false
+	});
 	var result = db('videos')
 				.chain()				
 				.where({'season': season})

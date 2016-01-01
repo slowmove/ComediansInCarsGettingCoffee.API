@@ -19,8 +19,7 @@ module.exports = (function(){
 				
 				_.forEach(videos, function(n, key) {
 					var itemExist = db('videos').find({ slug: n.slug });
-
-					if(!itemExist) {
+					if(!itemExist || typeof itemExist == 'undefined') {
 						request(n.mediaUrl, function (error, response, body) {
 							if (!error && response.statusCode == 200) {
 
@@ -30,6 +29,7 @@ module.exports = (function(){
 										n.videoUrl = videoDataArray[1*lineNumber+1];
 										console.log(n.videoUrl);
 										db('videos').push(n);
+										db.save();
 									}
 								});						
 							}
