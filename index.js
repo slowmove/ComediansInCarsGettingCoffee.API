@@ -4,6 +4,7 @@ require('module').Module._initPaths();
 var express = require('express'),
 	request = require('request'),
 	_ = require('lodash'),
+    fs = require('fs'),
 	low = require('lowdb'),
 	xml2js = require('xml2js'),
 	schedule = require('node-schedule'),
@@ -11,7 +12,7 @@ var express = require('express'),
 
 var scraperService = require('services/scraperService');
 
-var app = express()
+var app = express();
 
 var site = "http://comediansincarsgettingcoffee.com/";
 
@@ -33,8 +34,13 @@ app.get('/', function(req, res) {
 				.chain()
 				.sortByOrder(['season', 'episode'], ['asc', 'asc'])
 				.value();
-
-	res.send(result);
+    
+    var response = {
+    	lastModified: fs.statSync('db.json').mtime.getTime(),
+    	result: result
+    };
+    
+	res.send(response);
 });
 
 app.get('/season/:season', function(req, res) {
