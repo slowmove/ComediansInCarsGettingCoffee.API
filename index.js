@@ -33,6 +33,18 @@ app.get('/', function(req, res) {
 	var result = db('videos')
 				.chain()
 				.sortByOrder(['season', 'episode'], ['asc', 'asc'])
+				.value();    
+    
+	res.send(result);
+});
+
+app.get('/v1', function(req, res) {
+	var db = low('db.json', {
+	  	autosave: false	  	
+	});
+	var result = db('videos')
+				.chain()
+				.sortByOrder(['season', 'episode'], ['asc', 'asc'])
 				.value();
     
     var response = {
